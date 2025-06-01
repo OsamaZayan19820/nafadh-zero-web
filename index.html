@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تجربة نَفَاذ المباشرة</title>
+  <style>
+    body { font-family: Tahoma, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: right; }
+    h2 { color: #007B8A; }
+    textarea, input, button { width: 100%; margin-bottom: 10px; font-size: 16px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+    button { background-color: #007B8A; color: white; border: none; cursor: pointer; }
+    button:hover { background-color: #005f6b; }
+    .output { background: white; padding: 10px; border-radius: 5px; min-height: 60px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+<h2>🧠 نَفَاذ المباشر – API</h2>
+
+<label for="prompt">النص التوليدي (Prompt):</label>
+<textarea id="prompt" rows="4" placeholder="مثال: ما الحكمة من الصمت؟"></textarea>
+
+<label for="token">رمز الحماية (Token):</label>
+<input type="text" id="token" value="your-secret-token">
+
+<button onclick="runNafadh()">تشغيل نَفَاذ</button>
+
+<div class="output" id="result">📤 النتيجة ستظهر هنا...</div>
+
+<script>
+function runNafadh() {
+  const prompt = document.getElementById("prompt").value;
+  const token = document.getElementById("token").value;
+  const result = document.getElementById("result");
+
+  fetch("https://nafadh-zero.onrender.com/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt: prompt, token: token })
+  })
+  .then(res => res.json())
+  .then(data => {
+    result.innerText = "✅ " + data.output;
+  })
+  .catch(err => {
+    result.innerText = "❌ حدث خطأ: " + err.message;
+  });
+}
+</script>
+
+</body>
+</html>
