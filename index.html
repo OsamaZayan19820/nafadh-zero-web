@@ -1,50 +1,92 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تجربة نَفَاذ المباشرة</title>
+  <title>تجربة نَفَاذ المباشرة (Nafadh-Zero)</title>
   <style>
-    body { font-family: Tahoma, sans-serif; background-color: #f4f4f4; padding: 20px; text-align: right; }
-    h2 { color: #007B8A; }
-    textarea, input, button { width: 100%; margin-bottom: 10px; font-size: 16px; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
-    button { background-color: #007B8A; color: white; border: none; cursor: pointer; }
-    button:hover { background-color: #005f6b; }
-    .output { background: white; padding: 10px; border-radius: 5px; min-height: 60px; border: 1px solid #ccc; }
+    body {
+      font-family: Tahoma, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      text-align: right;
+    }
+    h2 {
+      color: #007B8A;
+    }
+    textarea, input, button {
+      width: 100%;
+      margin-bottom: 10px;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007B8A;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f6b;
+    }
+    .output {
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      min-height: 60px;
+      border: 1px solid #ccc;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: gray;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
 
-<h2>🧠 نَفَاذ المباشر – API</h2>
+<h2>🧠 واجهة نَفَاذ التفاعلية (Nafadh-Zero)</h2>
 
-<label for="prompt">النص التوليدي (Prompt):</label>
+<label for="prompt">📝 النص التوليدي (Prompt):</label>
 <textarea id="prompt" rows="4" placeholder="مثال: ما الحكمة من الصمت؟"></textarea>
 
-<label for="token">رمز الحماية (Token):</label>
-<input type="text" id="token" value="Nafadh@2025">
+<label for="token">🔒 رمز الحماية (Token):</label>
+<input type="text" id="token" value="Nafadh@2025" placeholder="أدخل رمز الحماية هنا">
 
 <button onclick="runNafadh()">تشغيل نَفَاذ</button>
 
 <div class="output" id="result">📤 النتيجة ستظهر هنا...</div>
 
+<div class="footer">نسخة اختبارية ضمن مشروع نفاذ | github.com/OsamaZayan19820/nafadh-zero</div>
+
 <script>
 function runNafadh() {
-  const prompt = document.getElementById("prompt").value;
-  const token = document.getElementById("token").value;
+  const prompt = document.getElementById("prompt").value.trim();
+  const token = document.getElementById("token").value.trim();
   const result = document.getElementById("result");
+
+  if (!prompt || !token) {
+    result.innerText = "❌ يرجى إدخال النص ورمز الحماية.";
+    return;
+  }
 
   fetch("https://nafadh-zero.onrender.com/generate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ prompt: prompt, token: token })
   })
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) throw new Error("فشل الاتصال بالخادم");
+    return res.json();
+  })
   .then(data => {
     result.innerText = "✅ " + data.output;
   })
   .catch(err => {
-    result.innerText = "❌ حدث خطأ: " + err.message;
+    result.innerText = "❌ خطأ: " + err.message;
   });
 }
 </script>
